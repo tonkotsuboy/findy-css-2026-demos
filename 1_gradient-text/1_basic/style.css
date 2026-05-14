@@ -11,17 +11,15 @@
 .gradient-text {
   background-clip: text;
   color: transparent;
-  /*background-clip: text;*/
-  /*color: transparent;*/
-  /*text-wrap: balance;*/
+  text-wrap: balance;
 }
 
 .gradient-text--hero {
   /* cyan → magenta：色相距離 ≈ 145° で OKLCH 補間の鮮やかさが際立つ */
   background-image: linear-gradient(
     in oklch 135deg,
-    red,
-    blue
+    oklch(0.78 0.16 200),
+    oklch(0.68 0.26 345)
   );
 }
 
