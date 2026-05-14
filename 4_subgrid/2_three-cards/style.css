@@ -1,0 +1,279 @@
+/* ============================================================
+   ★ 技術解説: CSS Subgrid
+   ------------------------------------------------------------
+   親 Grid の列・行定義を子要素がそのまま継承し、複数カードの
+   「サムネ / 日付 / タイトル / フッター」の 4 行を全カードで揃える。
+   ============================================================ */
+
+/* (1) 親 Grid: 2 列のレイアウト
+   行は明示せず、各カードが 4 行ぶんを span することで自然に行トラックが作られる */
+.grid {
+  display: grid;
+  gap: var(--space-md);
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* (2) 各カードを Grid item にしたうえで、自身も Grid コンテナにする
+   - grid-row: span 4         → 親 Grid の implicit row track を 4 行ぶん確保
+   - grid-template-rows: subgrid → その 4 行を子要素の行定義として継承
+   - row-gap                   → カード内部 4 行の間隔（親 gap とは独立に指定可能） */
+.card {
+  display: grid;
+  grid-row: span 4;
+  grid-template-rows: subgrid;
+  row-gap: var(--space-xs);
+}
+
+/* ============================================================
+   以下、装飾スタイル
+   （リセット / デザイントークン / カード表面の質感など、
+   　subgrid とは直接関係のない見た目の調整）
+   ============================================================ */
+
+/* ---------- Design Tokens (Light Theme only) ---------- */
+:root {
+  --liquid-primary: oklch(0.787 0.158 79);
+  --liquid-primary-vibrant: oklch(0.815 0.173 84);
+  --liquid-primary-accessible: oklch(0.407 0.087 64);
+
+  --text-primary: oklch(0.267 0.029 256);
+  --text-on-yellow: oklch(0.152 0.018 79);
+
+  --bg-primary: oklch(0.954 0.008 240);
+  --bg-gradient-1: oklch(0.93 0.04 240 / 0.6);
+  --bg-gradient-2: oklch(0.95 0.055 160 / 0.3);
+  --bg-orb-1: oklch(0.787 0.158 79 / 0.14);
+
+  --glass-card-bg: rgba(255, 255, 255, 0.5);
+  --glass-card-border: rgba(255, 255, 255, 0.7);
+  --glass-card-hover-bg: rgba(255, 255, 255, 0.7);
+  --glass-card-hover-border: oklch(0.787 0.158 79 / 0.3);
+
+  --highlight-top: rgba(255, 255, 255, 0.9);
+
+  --radius-sm: 12px;
+  --radius-lg: 28px;
+  --radius-full: 9999px;
+
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+
+  --ease-liquid: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* Ambient Mesh Background */
+body::before {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse at 20% 20%,
+      var(--bg-gradient-1) 0,
+      transparent 50%
+    ),
+    radial-gradient(ellipse at 80% 10%, var(--bg-orb-1) 0, transparent 45%),
+    radial-gradient(
+      ellipse at 90% 80%,
+      var(--bg-gradient-2) 0,
+      transparent 50%
+    ),
+    var(--bg-primary);
+}
+
+/* ---------- Stage / Container ---------- */
+.stage {
+  max-width: 900px;
+  padding: var(--space-lg);
+  margin: 0 auto;
+}
+
+/* ---------- Section Head ---------- */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--space-md);
+  gap: 10px;
+}
+
+.eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.eyebrow-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  animation: pulse 2.4s var(--ease-liquid) infinite;
+  background: var(--liquid-primary);
+  box-shadow: 0 0 0 4px oklch(from var(--liquid-primary) l c h / 0.18);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px oklch(from var(--liquid-primary) l c h / 0.18);
+  }
+  50% {
+    box-shadow: 0 0 0 8px oklch(from var(--liquid-primary) l c h / 0.05);
+  }
+}
+
+.eyebrow {
+  color: var(--liquid-primary-accessible);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.section-title {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.25;
+}
+
+/* ---------- Card (見た目部分) ---------- */
+.card {
+  overflow: hidden;
+  border: 1px solid var(--glass-card-border);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(12px);
+  background: var(--glass-card-bg);
+  box-shadow:
+    inset 0 1px 0 var(--highlight-top),
+    inset 0 -1px 0 rgb(0 0 0 / 0.04),
+    0 4px 24px rgb(0 0 0 / 0.05);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 0.2s var(--ease-liquid),
+    background 0.2s var(--ease-liquid),
+    box-shadow 0.2s var(--ease-liquid);
+}
+
+.card:hover {
+  border-color: var(--glass-card-hover-border);
+  background: var(--glass-card-hover-bg);
+  box-shadow: 0 10px 30px -5px rgb(0 0 0 / 0.05);
+}
+
+/* Row 1: Thumbnail */
+.thumb {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  margin: 14px 14px 0;
+  aspect-ratio: 16 / 9;
+  background: var(--bg-gradient-1);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.05);
+}
+
+.thumb-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Row 2: Date */
+.date {
+  display: block;
+  align-self: start;
+  padding: 0 18px;
+  color: var(--liquid-primary-accessible);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Row 3: Title */
+.title {
+  display: -webkit-box;
+  overflow: hidden;
+  padding: 0 18px;
+  margin: 0;
+  -webkit-box-orient: vertical;
+  color: var(--text-primary);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  -webkit-line-clamp: 3;
+  line-height: 1.55;
+  text-wrap: pretty;
+  transition: color 0.2s var(--ease-liquid);
+}
+
+.card:hover .title {
+  color: var(--liquid-primary);
+}
+
+/* Row 4: Footer
+   タイトル末尾の leading とボタン上端の間に視覚的余白を確保するため、
+   row-gap だけに頼らず padding-top で底上げする */
+.foot-row {
+  display: flex;
+  align-items: center;
+  padding: var(--space-xs) 18px 18px;
+}
+
+.register-btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding: 7px 14px;
+  border-radius: var(--radius-full);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  font-size: 12px;
+  font-weight: 700;
+  gap: 5px;
+  letter-spacing: 0.02em;
+  transition:
+    background 0.2s var(--ease-liquid),
+    color 0.2s var(--ease-liquid);
+  white-space: nowrap;
+}
+
+.card:hover .register-btn {
+  background: var(--liquid-primary);
+  color: var(--text-on-yellow);
+}
+
+/* ---------- Responsive ---------- */
+@media (width <= 768px) {
+  .stage {
+    padding: var(--space-sm);
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

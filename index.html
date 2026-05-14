@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Findy CSS 2026 — Demos</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        color-scheme: light;
+        --text-primary: oklch(0.27 0.03 256);
+        --text-secondary: oklch(0.5 0.02 256);
+        --bg: oklch(0.97 0.008 240);
+        --card-bg: oklch(1 0 0 / 0.7);
+        --card-border: oklch(1 0 0 / 0.8);
+        --accent: oklch(0.55 0.15 250);
+        --shadow: 0 4px 24px oklch(0 0 0 / 0.06);
+      }
+      body {
+        min-height: 100dvh;
+        padding: 56px 24px 96px;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Kaku Gothic ProN",
+          "Noto Sans JP", sans-serif;
+        line-height: 1.6;
+        color: var(--text-primary);
+        background:
+          radial-gradient(circle at 15% 15%, oklch(0.93 0.05 250 / 0.5), transparent 45%),
+          radial-gradient(circle at 85% 10%, oklch(0.9 0.12 80 / 0.18), transparent 45%),
+          radial-gradient(circle at 90% 90%, oklch(0.92 0.08 160 / 0.35), transparent 50%),
+          var(--bg);
+        background-attachment: fixed;
+      }
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+      }
+      header {
+        margin-bottom: 40px;
+      }
+      .eyebrow {
+        font-size: 0.8125rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      h1 {
+        margin: 8px 0 12px;
+        font-size: clamp(1.75rem, 4vw, 2.5rem);
+        letter-spacing: -0.02em;
+      }
+      .lead {
+        color: var(--text-secondary);
+        max-width: 640px;
+        text-wrap: pretty;
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      }
+      .group-title {
+        grid-column: 1 / -1;
+        margin: 24px 0 0;
+        font-size: 0.9375rem;
+        font-weight: 700;
+        color: var(--text-secondary);
+      }
+      .group-title:first-of-type {
+        margin-top: 0;
+      }
+      /* stretched link パターン: カードは div。.card-title-link の ::after で
+         カード全体をクリック領域にし、StackBlitz リンクだけ上に重ねる */
+      .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 20px;
+        border: 1px solid var(--card-border);
+        border-radius: 16px;
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.15s ease,
+          box-shadow 0.15s ease;
+      }
+      .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px oklch(0 0 0 / 0.1);
+      }
+      .card-path {
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 0.75rem;
+        color: var(--accent);
+      }
+      .card-title-link {
+        font-size: 1.0625rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: inherit;
+        text-decoration: none;
+      }
+      .card-title-link::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+      }
+      .card-desc {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        text-wrap: pretty;
+      }
+      .card-links {
+        margin-top: auto;
+        padding-top: 10px;
+        display: flex;
+        gap: 14px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+      }
+      .card-open {
+        color: var(--accent);
+      }
+      .card-stackblitz {
+        position: relative;
+        z-index: 1;
+        color: var(--accent);
+        text-decoration: none;
+      }
+      .card-stackblitz:hover {
+        text-decoration: underline;
+      }
+      footer {
+        margin-top: 48px;
+        font-size: 0.8125rem;
+        color: var(--text-secondary);
+      }
+      footer a {
+        color: var(--accent);
+      }
+      :focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <p class="eyebrow">Findy CSS 2026 · 2026-05-14</p>
+        <h1>2026 年最新 CSS 実践テクニック — デモ集</h1>
+        <p class="lead">
+          各デモは単体で動く static な HTML / CSS ページです。カードをクリックすると
+          デモが開きます。「StackBlitz」からはブラウザ上で編集・実行できます。
+        </p>
+      </header>
+
+      <div class="grid">
+        <h2 class="group-title">1. グラデーションテキストと色補間</h2>
+
+        <div class="card">
+          <span class="card-path">1_gradient-text/1_basic</span>
+          <a class="card-title-link" href="./1_gradient-text/1_basic/">Gradient Text</a>
+          <span class="card-desc">
+            <code>background-clip: text</code> × <code>linear-gradient(in oklch …)</code>
+            で鮮やかなグラデーション文字
+          </span>
+          <span class="card-links">
+            <span class="card-open">デモを開く →</span>
+            <a
+              class="card-stackblitz"
+              href="https://stackblitz.com/github/tonkotsuboy/findy-css-2026-demos/tree/main/1_gradient-text/1_basic"
+              >StackBlitz</a
+            >
+          </span>
+        </div>
+
+        <div class="card">
+          <span class="card-path">1_gradient-text/2_oklch-vs-srgb</span>
+          <a class="card-title-link" href="./1_gradient-text/2_oklch-vs-srgb/"
+            >補間色空間の比較</a
+          >
+          <span class="card-desc">
+            <code>linear-gradient</code> の補間を sRGB / OkLab / OkLCH で並べて比較
+          </span>
+          <span class="card-links">
+            <span class="card-open">デモを開く →</span>
+            <a
+              class="card-stackblitz"
+              href="https://stackblitz.com/github/tonkotsuboy/findy-css-2026-demos/tree/main/1_gradient-text/2_oklch-vs-srgb"
+              >StackBlitz</a
+            >
+          </span>
+        </div>
+
+        <div class="card">
+          <span class="card-path">1_gradient-text/3_color-vs-named</span>
+          <a class="card-title-link" href="./1_gradient-text/3_color-vs-named/"
+            >color() で自動 Oklab 補間</a
+          >
+          <span class="card-desc">
+            色の<strong>書き方</strong>（<code>color(srgb …)</code> か named/hex か）だけで
+            補間色空間が切り替わる
+          </span>
+          <span class="card-links">
+            <span class="card-open">デモを開く →</span>
+            <a
+              class="card-stackblitz"
+              href="https://stackblitz.com/github/tonkotsuboy/findy-css-2026-demos/tree/main/1_gradient-text/3_color-vs-named"
+              >StackBlitz</a
+            >
+          </span>
+        </div>
+
+        <h2 class="group-title">2. CSS Anchor Positioning</h2>
+
+        <div class="card">
+          <span class="card-path">2_anchor-position</span>
+          <a class="card-title-link" href="./2_anchor-position/"
+            >Anchor Positioning × Popover</a
+          >
+          <span class="card-desc">
+            <code>anchor-name</code> / <code>position-anchor</code> と Popover API で
+            JS ゼロのテーマ切替メニュー
+          </span>
+          <span class="card-links">
+            <span class="card-open">デモを開く →</span>
+            <a
+              class="card-stackblitz"
+              href="https://stackblitz.com/github/tonkotsuboy/findy-css-2026-demos/tree/main/2_anchor-position"
+              >StackBlitz</a
+            >
+          </span>
+        </div>
+
+        <h2 class="group-title">3. Invoker Commands API</h2>
+
+        <div class="card">
+          <span class="card-path">3_command-commandfor/1_dialog</span>
+          <a class="card-title-link" href="./3_command-commandfor/1_dialog/"
+            >command / commandfor で dialog</a
+          >
+          <span class="card-desc">
+            <code>command</code> / <code>commandfor</code> 属性だけで
+            <code>&lt;dialog&gt;</code> をモーダル開閉（JS ゼロ）
+          </span>
+          <span class="card-links">
+            <span class="card-open">デモを開く →</span>
+            <a
+              class="card-stackblitz"
+              href="https://stackblitz.com/github/tonkotsuboy/findy-css-2026-demos/tree/main/3_command-commandfor/1_dialog"
+              >StackBlitz</a
+            >
+          </span>
+        </div>
+
+        <h2 class="group-title">4. CSS Subgrid</h2>
+
+        <div class="card">
+          <span class="card-path">4_subgrid/1_two-cards</span>
+          <a class="card-title-link" href="./4_subgrid/1_two-cards/"
+            >カードの行揃え（2 枚）</a
+          >
+          <span class="card-desc">
+            <code>grid-template-rows: subgrid</code> でカード内 4 行を全カードで揃える
+          </span>
+          <span class="card-links">
+            <span class="card-open">デモを開く →</span>
+            <a
+              class="card-stackblitz"
+              href="https://stackblitz.com/github/tonkotsuboy/findy-css-2026-demos/tree/main/4_subgrid/1_two-cards"
+              >StackBlitz</a
+            >
+          </span>
+        </div>
+
+        <div class="card">
+          <span class="card-path">4_subgrid/2_three-cards</span>
+          <a class="card-title-link" href="./4_subgrid/2_three-cards/"
+            >カードの行揃え（3 枚）</a
+          >
+          <span class="card-desc">
+            同じ <code>subgrid</code> を 3 枚のカードで。タイトルの長さが違っても揃う
+          </span>
+          <span class="card-links">
+            <span class="card-open">デモを開く →</span>
+            <a
+              class="card-stackblitz"
+              href="https://stackblitz.com/github/tonkotsuboy/findy-css-2026-demos/tree/main/4_subgrid/2_three-cards"
+              >StackBlitz</a
+            >
+          </span>
+        </div>
+
+        <div class="card">
+          <span class="card-path">4_subgrid/3_form_columns</span>
+          <a class="card-title-link" href="./4_subgrid/3_form_columns/"
+            >フォームの列揃え</a
+          >
+          <span class="card-desc">
+            <code>grid-template-columns: subgrid</code> で label / input 列を全行で揃える
+          </span>
+          <span class="card-links">
+            <span class="card-open">デモを開く →</span>
+            <a
+              class="card-stackblitz"
+              href="https://stackblitz.com/github/tonkotsuboy/findy-css-2026-demos/tree/main/4_subgrid/3_form_columns"
+              >StackBlitz</a
+            >
+          </span>
+        </div>
+      </div>
+
+      <footer>
+        Findy CSS 2026 talk demos ·
+        <a href="https://github.com/tonkotsuboy/findy-css-2026-demos">GitHub</a>
+      </footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,208 @@
+/* ============================================================
+   ★ 技術解説: Invoker Commands API + dialog
+   ------------------------------------------------------------
+   このデモの主役は HTML の command / commandfor 属性。
+   index.html 側で
+     - 開くボタン: command="show-modal"
+     - 閉じるボタン: command="close"
+     - dialog 要素: closedby="any"（backdrop / Esc で閉じる）
+   を指定するだけで、JS 0 行でモーダルが完成する。
+
+   CSS は @starting-style と allow-discrete でフェードイン/アウト
+   を担当する。dialog の [open] 属性切替を起点にトランジションする。
+   ============================================================ */
+
+.dialog {
+  opacity: 0;
+  scale: 0.8;
+
+  /* display と overlay は離散プロパティ。allow-discrete を指定すると
+     :open / 非:open 切替時のフェードが効くようになる。 */
+  transition: 0.4s allow-discrete;
+}
+
+.dialog[open] {
+  opacity: 1;
+  scale: 1;
+
+  /* @starting-style: 表示開始時の起点。これがないと初回表示時に
+     フェードインせず、いきなり opacity:1 で描画されてしまう。 */
+  @starting-style {
+    opacity: 0;
+    scale: 0.8;
+  }
+}
+
+.dialog::backdrop {
+  opacity: 0;
+  transition: 0.4s allow-discrete;
+}
+
+.dialog[open]::backdrop {
+  opacity: 1;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+/* ============================================================
+   以下、装飾スタイル
+   （dialog のレイアウト、ナビ、ボタン色など、Invoker Commands と
+   　直接関係のない見た目の調整）
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+:root {
+  --base-color: #e8faff;
+  --main-color: #087c98;
+}
+
+html {
+  overflow: scroll;
+  scroll-snap-type: y mandatory;
+  color: #333333;
+  font-family:
+    "游ゴシック Medium", YuGothic, YuGothicM, "Hiragino Kaku Gothic ProN",
+    Meiryo, sans-serif;
+}
+
+body {
+  padding-top: 80px;
+  line-height: 1.7;
+}
+
+button {
+  font-family: "Lato", sans-serif;
+}
+
+img {
+  max-width: 100%;
+  object-fit: cover;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Navigation ---------- */
+.navigation {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  display: grid;
+  width: 100%;
+  height: 80px;
+  align-items: center;
+  background-color: var(--main-color);
+  grid-auto-flow: column;
+}
+
+.brand-logo {
+  display: grid;
+  width: 80px;
+  height: 80px;
+  background-image: linear-gradient(to right, #32b39c 0%, #098bc3 100%);
+  place-content: center;
+}
+
+.link-list {
+  font-size: 18px;
+  display: grid;
+  justify-content: end;
+  padding-right: 24px;
+  grid-auto-flow: column;
+  gap: 30px;
+}
+
+.link-list a {
+  color: #ffffff;
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  text-decoration: none;
+}
+
+/* ---------- Section / Profile ---------- */
+section {
+  display: grid;
+  height: calc(100svh - 80px);
+  place-content: center;
+  place-items: center;
+  gap: 24px;
+  scroll-margin-top: 80px;
+}
+
+.profile {
+  background: var(--base-color) url(./images/profile_title_bg.svg) no-repeat
+    center 0;
+}
+
+/* ---------- Open Button ---------- */
+.dialog-button {
+  width: 200px;
+  height: 50px;
+  border: none;
+  border-radius: 25px;
+  background-color: #32b39c;
+  background-image: linear-gradient(to right, #32b39c, #098bc3);
+  background-position: 100% 0;
+  background-size: cover;
+  color: white;
+  cursor: pointer;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* ---------- Dialog Layout ---------- */
+.dialog {
+  overflow: initial;
+  width: 800px;
+  height: 530px;
+  padding: 8px;
+  border: none;
+  margin: auto;
+  background-color: transparent;
+  color: white;
+}
+
+.dialog .image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.image-title {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.image-description {
+  text-align: center;
+}
+
+.dialog::backdrop {
+  backdrop-filter: blur(12px);
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* ---------- Close Button ---------- */
+.close-button {
+  position: absolute;
+  top: -24px;
+  right: -24px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}

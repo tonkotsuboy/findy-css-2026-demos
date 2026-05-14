@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Invoker Commands - dialog をモーダル表示</title>
+    <link href="./style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav aria-label="ページ内ナビゲーション" class="navigation">
+      <div class="brand-logo">
+        <img alt="UNI" height="28" src="./images/brand_logo.svg" width="37" />
+      </div>
+      <ul class="link-list">
+        <li><a href="#profile">PROFILE</a></li>
+        <li><a href="#gallery">GALLERY</a></li>
+        <li><a href="#blog">BLOG</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section class="profile" id="profile">
+        <!-- ★ Invoker Commands: command="show-modal" で dialog をモーダル表示 -->
+        <button class="dialog-button"
+                commandfor="dialog" command="show-modal">
+          詳しく見る
+        </button>
+      </section>
+    </main>
+
+    <!-- closedby="any" を付けると、backdrop クリック / Esc で閉じる挙動が
+         HTML 属性だけで実現できる -->
+    <dialog class="dialog" id="dialog" closedby="any">
+      <img
+        alt=""
+        class="image"
+        height="600"
+        src="./images/photo2.jpg"
+        width="800"
+      />
+      <h2 class="image-title">待ちぼうけのうにちゃん</h2>
+      <p class="image-description">玄関の鍵が空くと、いつもこの姿勢になる</p>
+
+      <!-- ★ Invoker Commands: command="close" で dialog を閉じる -->
+      <button class="close-button" commandfor="dialog" command="close">
+        <img alt="閉じる" height="25" src="./images/close.png" width="25" />
+      </button>
+    </dialog>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>AI Gradient Text - 基本</title>
+    <link href="./style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>Gradient Text</h1>
+      <p class="lead">
+        <code>linear-gradient(in oklch ...)</code> ×
+        <code>background-clip: text</code>
+      </p>
+    </header>
+
+    <main class="stage">
+      <!-- グラデーションテキスト本体：cyan → magenta を OKLCH 補間で繋ぐ -->
+      <section class="glass-card hero">
+        <p class="eyebrow">HERO</p>
+        <h2 class="gradient-text gradient-text--hero">
+          Build with AI,<br />ship faster.
+        </h2>
+      </section>
+
+      <!-- バリエーション：複数のグラデでテキストが主役であることを見せる -->
+      <section class="variants">
+        <article class="glass-card variant">
+          <p class="eyebrow">SUNRISE</p>
+          <h3 class="gradient-text gradient-text--sunrise">朝焼け</h3>
+        </article>
+
+        <article class="glass-card variant">
+          <p class="eyebrow">AURORA</p>
+          <h3 class="gradient-text gradient-text--aurora">Aurora</h3>
+        </article>
+
+        <article class="glass-card variant">
+          <p class="eyebrow">CITRUS</p>
+          <h3 class="gradient-text gradient-text--citrus">Citrus Pop</h3>
+        </article>
+      </section>
+    </main>
+  </body>
+</html>

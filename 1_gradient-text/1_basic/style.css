@@ -1,0 +1,242 @@
+/* ============================================================
+   ★ 技術解説: グラデーションテキスト
+   ------------------------------------------------------------
+   1) background-image に linear-gradient(in oklch ...) を当てる
+   2) background-clip: text でテキスト形に切り抜く
+   3) color: transparent で背景を見せる
+   in oklch を指定することで、補間が知覚的に均一になり
+   彩度の落ち込み（中央付近のグレー化）を回避できる。
+   ============================================================ */
+
+.gradient-text {
+  background-clip: text;
+  color: transparent;
+  /*background-clip: text;*/
+  /*color: transparent;*/
+  /*text-wrap: balance;*/
+}
+
+.gradient-text--hero {
+  /* cyan → magenta：色相距離 ≈ 145° で OKLCH 補間の鮮やかさが際立つ */
+  background-image: linear-gradient(
+    in oklch 135deg,
+    red,
+    blue
+  );
+}
+
+.gradient-text--sunrise {
+  background-image: linear-gradient(
+    in oklch 90deg,
+    oklch(0.85 0.18 60),
+    oklch(0.7 0.22 20)
+  );
+}
+
+.gradient-text--aurora {
+  background-image: linear-gradient(
+    in oklch 90deg,
+    oklch(0.82 0.18 160),
+    oklch(0.68 0.2 280)
+  );
+}
+
+.gradient-text--citrus {
+  background-image: linear-gradient(
+    in oklch 90deg,
+    oklch(0.9 0.2 110),
+    oklch(0.78 0.158 79)
+  );
+}
+
+/* ============================================================
+   以下、装飾スタイル
+   （リセット / デザイントークン / Liquid Glass の質感など、
+   　グラデーションテキストとは直接関係のない見た目の調整）
+   ============================================================ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  color-scheme: light;
+
+  /* Liquid Glass パレット（DESIGN.md §2 準拠）
+     ボタンや CTA に色を載せないニュートラル方針 */
+  --text-primary: oklch(0.267 0.029 256);
+  --text-secondary: oklch(0.406 0.013 255);
+  --text-tertiary: oklch(0.461 0.014 254);
+  --bg-primary: oklch(0.954 0.008 240);
+
+  --glass-card-bg: rgba(255, 255, 255, 0.78);
+  --glass-card-border: rgba(255, 255, 255, 0.7);
+
+  --shadow-rest: 0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-elevated:
+    0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 4px 8px -2px rgba(0, 0, 0, 0.04);
+  --inner-highlight:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+
+  /* focus-visible 用ニュートラルリング */
+  --focus-ring: oklch(0.15 0 0);
+
+  --ease-liquid: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  font-family:
+    "Noto Sans JP", "Inter", "Hiragino Kaku Gothic ProN", "游ゴシック Medium",
+    YuGothic, Meiryo, system-ui, sans-serif;
+  min-height: 100vh;
+  padding: 28px 24px 48px;
+  color: var(--text-primary);
+  line-height: 1.6;
+
+  /* アンビエントメッシュ背景：4 つの orb でやわらかい光を作る */
+  background:
+    radial-gradient(
+      circle at 20% 20%,
+      oklch(0.95 0.035 240 / 0.6),
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 10%,
+      oklch(0.787 0.158 79 / 0.14),
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 90% 80%,
+      oklch(0.95 0.055 160 / 0.3),
+      transparent 50%
+    ),
+    var(--bg-primary);
+  background-attachment: fixed;
+}
+
+.header {
+  max-width: 1100px;
+  margin: 0 auto 28px;
+  text-align: center;
+}
+
+.header h1 {
+  font-family: "Inter", "Noto Sans JP", system-ui, sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+.lead {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  max-width: 720px;
+  margin: 0 auto;
+  text-wrap: pretty;
+}
+
+.lead code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 0.85em;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: var(--glass-card-bg);
+  border: 1px solid var(--glass-card-border);
+  color: var(--text-primary);
+}
+
+.stage {
+  max-width: 960px;
+  margin: 0 auto;
+  display: grid;
+  gap: 24px;
+}
+
+.glass-card {
+  padding: 32px;
+  border-radius: 28px;
+  background: var(--glass-card-bg);
+  border: 1px solid var(--glass-card-border);
+  box-shadow: var(--shadow-rest), var(--inner-highlight);
+  transition:
+    box-shadow 0.3s var(--ease-liquid),
+    border-color 0.3s var(--ease-liquid);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow-elevated), var(--inner-highlight);
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+.eyebrow {
+  font-family: "Inter", "Noto Sans JP", system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+
+.hero {
+  padding: 56px 32px;
+  text-align: center;
+}
+
+.hero-sub {
+  margin-top: 20px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  text-wrap: pretty;
+}
+
+.variants {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.variant {
+  padding: 28px 24px;
+  text-align: center;
+}
+
+/* ---- .gradient-text* の装飾（タイポグラフィ／サイズ） ----
+   主役のグラデーション宣言は冒頭セクションを参照 */
+.gradient-text {
+  font-family: "Inter", "Noto Sans JP", system-ui, sans-serif;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.gradient-text--hero {
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
+}
+
+.gradient-text--sunrise,
+.gradient-text--aurora,
+.gradient-text--citrus {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

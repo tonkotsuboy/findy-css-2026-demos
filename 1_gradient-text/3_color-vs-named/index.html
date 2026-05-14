@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>color(srgb …) と named/hex で自動補間が変わる</title>
+    <link href="./style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>
+        <code>color(srgb …)</code> を使うだけで自動 Oklab 補間
+      </h1>
+      <p class="lead">
+        どちらも <code>in &lt;色空間&gt;</code> を書いていない。<br />
+        色の<strong>書き方</strong>が違うだけで、補間色空間が自動で切り替わる。
+      </p>
+    </header>
+
+    <main class="stage">
+      <!-- 青 ↔ 赤 -->
+      <section class="pair">
+        <h2 class="pair-title">blue → red</h2>
+
+        <div class="row">
+          <p class="row-label">
+            named<br /><span class="row-sub">/ hex</span>
+          </p>
+          <div class="bar-cell">
+            <div class="bar bar--blue-red-legacy"></div>
+            <p class="bar-caption">補間 = sRGB（中央: 暗い灰紫）</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <p class="row-label">
+            color()<br /><span class="row-sub">srgb</span>
+          </p>
+          <div class="bar-cell">
+            <div class="bar bar--blue-red-color"></div>
+            <p class="bar-caption">補間 = Oklab（中央: 鮮やかな紫）</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 緑 ↔ マゼンタ -->
+      <section class="pair">
+        <h2 class="pair-title">green → magenta</h2>
+
+        <div class="row">
+          <p class="row-label">
+            named<br /><span class="row-sub">/ hex</span>
+          </p>
+          <div class="bar-cell">
+            <div class="bar bar--green-magenta-legacy"></div>
+            <p class="bar-caption">補間 = sRGB（中央: 濁ったグレー）</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <p class="row-label">
+            color()<br /><span class="row-sub">srgb</span>
+          </p>
+          <div class="bar-cell">
+            <div class="bar bar--green-magenta-color"></div>
+            <p class="bar-caption">補間 = Oklab（中央: 鮮やかな黄緑〜ピンク）</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 黄 ↔ 青 -->
+      <section class="pair">
+        <h2 class="pair-title">yellow → blue</h2>
+
+        <div class="row">
+          <p class="row-label">
+            named<br /><span class="row-sub">/ hex</span>
+          </p>
+          <div class="bar-cell">
+            <div class="bar bar--yellow-blue-legacy"></div>
+            <p class="bar-caption">補間 = sRGB（中央: くすんだグレー）</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <p class="row-label">
+            color()<br /><span class="row-sub">srgb</span>
+          </p>
+          <div class="bar-cell">
+            <div class="bar bar--yellow-blue-color"></div>
+            <p class="bar-caption">補間 = Oklab（中央: 鮮やかな緑寄り）</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 赤 ↔ シアン -->
+      <section class="pair">
+        <h2 class="pair-title">red → cyan</h2>
+
+        <div class="row">
+          <p class="row-label">
+            named<br /><span class="row-sub">/ hex</span>
+          </p>
+          <div class="bar-cell">
+            <div class="bar bar--red-cyan-legacy"></div>
+            <p class="bar-caption">補間 = sRGB（中央: 灰色）</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <p class="row-label">
+            color()<br /><span class="row-sub">srgb</span>
+          </p>
+          <div class="bar-cell">
+            <div class="bar bar--red-cyan-color"></div>
+            <p class="bar-caption">補間 = Oklab（中央: 鮮やかな黄緑寄り）</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
